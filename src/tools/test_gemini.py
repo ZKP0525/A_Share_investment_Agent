@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from google import genai
+from openai import OpenAI
 import json
 
 # 加载环境变量
@@ -18,41 +18,42 @@ def test_simple_prompt():
     print(f"Using model: {model_name}")
 
     # 初始化客户端
-    client = genai.Client(api_key=api_key)
+    client = OpenAI(api_key=api_key, base_url="https://dashscope.aliyuncs.com/compatible-mode/v1")
 
     # 测试简单生成
-    response = client.models.generate_content(
+    response = client.chat.completions.create(
         model=model_name,
-        contents='Write a story about a magic backpack.'
+        messages=[
+            {'role': 'user', 'content': 'Write a story about a magic backpack.'}
+        ]
     )
 
     print("\nSimple prompt response:")
-    print("Response type:", type(response))
-    print("Response attributes:", dir(response))
-    print("\nResponse text:", response.text)
+    # print("Response type:", type(response))
+    # print("Response attributes:", dir(response))
+    print("\nResponse text:", response.choices[0].message.content)
 
-    # 打印完整的响应对象结构
-    print("\nFull response structure:")
-    print(json.dumps(response.dict(), indent=2))
+    # # 打印完整的响应对象结构
+    # print("\nFull response structure:")
+    # print(json.dumps(response.dict(), indent=2))
 
 
 def test_chat_format():
     """测试聊天格式的提示词"""
-    client = genai.Client(api_key=api_key)
+    client = OpenAI(api_key=api_key, base_url="https://dashscope.aliyuncs.com/compatible-mode/v1")
 
     # 测试系统指令
-    response = client.models.generate_content(
+    response = client.chat.completions.create(
         model=model_name,
-        contents='What is 1+1?',
-        config={
-            'system_instruction': 'You are a helpful math tutor.',
-            'temperature': 0.3,
-        }
+        messages=[
+            {'role': 'user', 'content': 'What is 1+1?'}
+        ]
     )
 
     print("\nChat format response:")
-    print("Response type:", type(response))
-    print("\nResponse text:", response.text)
+    # print("Response type:", type(response))
+    print("\nResponse text:", response.choices[0].message.content)
+
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 def sentiment_agent(state: AgentState):
     """分析市场情绪并生成交易信号"""
-    print(f"----------state-----------: {state}")
+    # print(f"----------state-----------: {state}")
     show_reasoning = state["metadata"]["show_reasoning"]
     data = state["data"]
     symbol = data["ticker"]
